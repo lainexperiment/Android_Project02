@@ -47,7 +47,7 @@ public class MessageController {
     }
 
     public void getPosts(final Consumer<List<Post>> consumer) {
-        if (System.currentTimeMillis() - prevPostReceiveMillis < 5 * 60 * 1000)
+        if (System.currentTimeMillis() - sharedPreferences.getLong("-1", 0) < 5 * 60 * 1000)
         {
             repository.getAllPosts(consumer);
             Log.i(TAG, "Less than 5 minutes passed. All posts Received from the database.");
@@ -58,7 +58,8 @@ public class MessageController {
     }
 
     public void getComments(int postId, final Consumer<List<Comment>> consumer) {
-        long prevCommentReceiveMillis = sparsePrevCommentMillis.get(postId, 0);
+//        long prevCommentReceiveMillis = sparsePrevCommentMillis.get(postId, 0);
+        long prevCommentReceiveMillis = sharedPreferences.getLong(String.valueOf(postId), 0);
         if (System.currentTimeMillis() - prevCommentReceiveMillis < 5 * 60 * 1000)
         {
             repository.getAllComments(consumer, postId);
@@ -96,7 +97,8 @@ public class MessageController {
             }
             consumer.accept(posts);
             repository.insertPosts(posts);
-            prevPostReceiveMillis = System.currentTimeMillis();
+//            prevPostReceiveMillis = System.currentTimeMillis();
+            sharedPreferences.edit().putLong("-1", System.currentTimeMillis()).apply();
         }
 
         @Override
@@ -138,6 +140,8 @@ public class MessageController {
             Log.i(TAG, "Inserting comments of post " + postId);
             repository.insertComments(comments);
             sparsePrevCommentMillis.put(postId, System.currentTimeMillis());
+            sharedPreferences.edit().
+                    putLong(String.valueOf(postId), System.currentTimeMillis()).apply();
         }
 
         @Override
