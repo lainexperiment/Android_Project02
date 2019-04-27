@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Android_Project02</string>
+    <string name="gridview">GridView</string>
+    <string name="about_us">About Us</string>
 </resources>
