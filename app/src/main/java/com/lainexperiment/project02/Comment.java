@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 @Entity(tableName = "comment_table", foreignKeys = @ForeignKey(entity = Comment.class,
         parentColumns = "id", childColumns = "postId", onDelete = ForeignKey.CASCADE))
-public class Comment implements DataContainer {
+public class Comment {
     @PrimaryKey(autoGenerate = true)
     private int id;
     private int postId;
@@ -54,16 +54,5 @@ public class Comment implements DataContainer {
 
     public void setBody(String body) {
         this.body = body;
-    }
-
-    @Override
-    public HashMap<String, String> getData() {
-        HashMap<String, String> data = new HashMap<>();
-        data.put("postId", String.valueOf(postId));
-        data.put("id", String.valueOf(id));
-        data.put("name", name);
-        data.put("email", email);
-        data.put("body", body);
-        return data;
     }
 }

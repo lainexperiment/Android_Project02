@@ -57,7 +57,7 @@ public class MessageController {
         });
     }
 
-    public void getComments(int postId) {
+    public void getComments(int postId, final Consumer<List<Comment>> callback) {
         Call<List<Comment>> commentsCall = api.getComments(postId);
         commentsCall.enqueue(new Callback<List<Comment>>() {
             @Override
@@ -72,7 +72,7 @@ public class MessageController {
                     // TODO handle null comments
                     return;
                 }
-                //TODO
+                callback.accept(comments);
             }
 
             @Override

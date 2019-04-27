@@ -6,11 +6,11 @@ import android.arch.persistence.room.PrimaryKey;
 import java.util.HashMap;
 
 @Entity(tableName = "post_table")
-public class Post implements DataContainer
+public class Post
 {
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private int usetId;
+    private int userId;
     private String title;
     private String body;
 
@@ -22,12 +22,12 @@ public class Post implements DataContainer
         this.id = id;
     }
 
-    public int getUsetId() {
-        return usetId;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUsetId(int usetId) {
-        this.usetId = usetId;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getTitle() {
@@ -44,16 +44,5 @@ public class Post implements DataContainer
 
     public void setBody(String body) {
         this.body = body;
-    }
-
-    @Override
-    public HashMap<String, String> getData()
-    {
-        HashMap<String, String> data = new HashMap<>();
-        data.put("userId", String.valueOf(usetId));
-        data.put("id", String.valueOf(id));
-        data.put("title", title);
-        data.put("body", body);
-        return data;
     }
 }
