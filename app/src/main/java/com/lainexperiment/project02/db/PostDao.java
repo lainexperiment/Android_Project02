@@ -3,6 +3,7 @@ package com.lainexperiment.project02.db;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
+import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
@@ -13,8 +14,8 @@ import java.util.List;
 @Dao
 public interface PostDao
 {
-    @Insert
-    void insertAll(List<Post> posts);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertAll(Post... posts);
 
     @Update
     void update(Post post);

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.util.Consumer;
 import android.telecom.RemoteConnection;
 
+import com.lainexperiment.project02.db.AppRepository;
 import com.lainexperiment.project02.db.CommentDao;
 import com.lainexperiment.project02.db.JTDatabase;
 import com.lainexperiment.project02.db.PostDao;
@@ -20,7 +21,7 @@ public class MessageController {
     private static MoshiAPI api;
     private static MessageController instance;
 
-    private JTDatabase database;
+    private AppRepository repository;
     private long prevPostReceiveMillis = 0;
     private long prevCommentReceiveMillis = 0;
 
@@ -30,7 +31,7 @@ public class MessageController {
                 .addConverterFactory(MoshiConverterFactory.create())
                 .build();
         MessageController.api = retrofit.create(MoshiAPI.class);
-        this.database = JTDatabase.getInstance(context);
+        this.repository = new AppRepository(context);
     }
 
     public static MessageController getInstance(Context context) {
@@ -43,7 +44,7 @@ public class MessageController {
     public void getPosts(final Consumer<List<Post>> consumer) {
         if (System.currentTimeMillis() - prevPostReceiveMillis < 5 * 60 * 1000)
         {
-            getPostsFromDatabase(consumer);
+            repository.getAllPosts(consumer);
             // TODO log
             return;
         }
@@ -54,26 +55,12 @@ public class MessageController {
     public void getComments(int postId, final Consumer<List<Comment>> consumer) {
         if (System.currentTimeMillis() - prevCommentReceiveMillis < 5 * 60 * 1000)
         {
-            getCommentsFromDatabase(consumer, postId);
+            repository.getAllComments(consumer, postId);
             // TODO log
             return;
         }
         Call<List<Comment>> commentsCall = api.getComments(postId);
         commentsCall.enqueue(new CommentReceivingCallback(consumer, postId));
-    }
-
-    private void getPostsFromDatabase(Consumer<List<Post>> consumer)
-    {
-        PostDao postDao = database.postDao();
-        List<Post> posts = postDao.getAllPosts();
-        consumer.accept(posts);
-    }
-
-    private void getCommentsFromDatabase(Consumer<List<Comment>> consumer, int postId)
-    {
-        CommentDao commentDao = database.commentDao();
-        List<Comment> comments = commentDao.getAllPostComments(postId);
-        consumer.accept(comments);
     }
 
     private class PostReceivingCallback implements Callback<List<Post>>
@@ -88,10 +75,9 @@ public class MessageController {
         @Override
         public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
             List<Post> posts;
-            PostDao postDao = database.postDao();
 
             if (!response.isSuccessful()) {
-                getPostsFromDatabase(consumer);
+                repository.getAllPosts(consumer);
                 // TODO log
                 return;
             }
@@ -102,13 +88,13 @@ public class MessageController {
                 return;
             }
             consumer.accept(posts);
-            postDao.insertAll(posts);
+            repository.insertPosts(posts);
             prevPostReceiveMillis = System.currentTimeMillis();
         }
 
         @Override
         public void onFailure(Call<List<Post>> call, Throwable t) {
-            getPostsFromDatabase(consumer);
+            repository.getAllPosts(consumer);
             // TODO handle error
         }
     }
@@ -127,10 +113,9 @@ public class MessageController {
         @Override
         public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
             List<Comment> comments;
-            CommentDao commentDao = database.commentDao();
 
             if (!response.isSuccessful()) {
-                getCommentsFromDatabase(consumer, postId);
+                repository.getAllComments(consumer, postId);
                 // TODO log
                 return;
             }
@@ -141,13 +126,13 @@ public class MessageController {
                 return;
             }
             consumer.accept(comments);
-            commentDao.insertAll(comments);
+            repository.insertComments(comments);
             prevCommentReceiveMillis = System.currentTimeMillis();
         }
 
         @Override
         public void onFailure(Call<List<Comment>> call, Throwable t) {
-            getCommentsFromDatabase(consumer, postId);
+            repository.getAllComments(consumer, postId);
             // TODO handle error
         }
     }
