@@ -2,12 +2,10 @@ package com.lainexperiment.project02;
 
 import android.content.Context;
 import android.support.v4.util.Consumer;
-import android.telecom.RemoteConnection;
+import android.util.Log;
+import android.util.SparseLongArray;
 
 import com.lainexperiment.project02.db.AppRepository;
-import com.lainexperiment.project02.db.CommentDao;
-import com.lainexperiment.project02.db.JTDatabase;
-import com.lainexperiment.project02.db.PostDao;
 
 import java.util.List;
 
@@ -18,12 +16,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.moshi.MoshiConverterFactory;
 
 public class MessageController {
+    private final static String TAG = "MessageController";
+
     private static MoshiAPI api;
     private static MessageController instance;
 
     private AppRepository repository;
     private long prevPostReceiveMillis = 0;
-    private long prevCommentReceiveMillis = 0;
+    private SparseLongArray sparsePrevCommentMillis;
 
     private MessageController(Context context) {
         Retrofit retrofit = new Retrofit.Builder()
@@ -32,6 +32,7 @@ public class MessageController {
                 .build();
         MessageController.api = retrofit.create(MoshiAPI.class);
         this.repository = new AppRepository(context);
+        this.sparsePrevCommentMillis = new SparseLongArray();
     }
 
     public static MessageController getInstance(Context context) {
@@ -45,7 +46,7 @@ public class MessageController {
         if (System.currentTimeMillis() - prevPostReceiveMillis < 5 * 60 * 1000)
         {
             repository.getAllPosts(consumer);
-            // TODO log
+            Log.i(TAG, "Less than 5 minutes passed. All posts Received from the database.");
             return;
         }
         Call<List<Post>> postsCall = api.getPosts();
@@ -53,10 +54,12 @@ public class MessageController {
     }
 
     public void getComments(int postId, final Consumer<List<Comment>> consumer) {
+        long prevCommentReceiveMillis = sparsePrevCommentMillis.get(postId, 0);
         if (System.currentTimeMillis() - prevCommentReceiveMillis < 5 * 60 * 1000)
         {
             repository.getAllComments(consumer, postId);
-            // TODO log
+            Log.i(TAG, "Less than 5 minutes passed. Comments from post id " + postId +
+                    " Received from the database.");
             return;
         }
         Call<List<Comment>> commentsCall = api.getComments(postId);
@@ -127,7 +130,7 @@ public class MessageController {
             }
             consumer.accept(comments);
             repository.insertComments(comments);
-            prevCommentReceiveMillis = System.currentTimeMillis();
+            sparsePrevCommentMillis.put(postId, System.currentTimeMillis());
         }
 
         @Override
