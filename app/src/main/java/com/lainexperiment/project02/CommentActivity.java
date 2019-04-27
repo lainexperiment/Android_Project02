@@ -46,7 +46,7 @@ public class CommentActivity extends AppCompatActivity {
     }
 
     private void showData(final int postId) {
-        MessageController.getInstance().getComments(postId, new Consumer<List<Comment>>() {
+        MessageController.getInstance(this).getComments(postId, new Consumer<List<Comment>>() {
             @Override
             public void accept(List<Comment> comments) {
                 ((CommentRecyclerViewAdapter) recyclerViewAdapter).updateData(comments);
