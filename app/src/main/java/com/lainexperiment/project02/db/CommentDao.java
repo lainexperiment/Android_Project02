@@ -8,17 +8,19 @@ import android.arch.persistence.room.Update;
 
 import com.lainexperiment.project02.Comment;
 
+import java.util.List;
+
 @Dao
 public interface CommentDao
 {
     @Insert
-    void insert(Comment... comments);
+    void insertAll(List<Comment> comments);
 
     @Update
     void update(Comment comment);
 
     @Update
-    void update(Comment... comments);
+    void updateAll(List<Comment> comments);
 
     @Delete
     void delete(Comment comment);
@@ -27,5 +29,5 @@ public interface CommentDao
             " comment_table.body FROM comment_table INNER JOIN post_table" +
             " ON comment_table.postId = post_table.id" +
             " WHERE post_table.id = :postId")
-    void getAllPostComments(int postId);
+    List<Comment> getAllPostComments(int postId);
 }

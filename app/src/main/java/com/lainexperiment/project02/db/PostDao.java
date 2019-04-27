@@ -14,13 +14,13 @@ import java.util.List;
 public interface PostDao
 {
     @Insert
-    void insert(Post... posts);
+    void insertAll(List<Post> posts);
 
     @Update
     void update(Post post);
 
     @Update
-    void update(Post... posts);
+    void updateAll(List<Post> posts);
 
     @Delete
     void delete(Post post);
