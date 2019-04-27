@@ -1,4 +1,4 @@
-package com.lainexperiment.android_project02;
+package com.lainexperiment.project02;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

@@ -1,4 +1,4 @@
-package com.lainexperiment.android_project02;
+package com.lainexperiment.project02;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
