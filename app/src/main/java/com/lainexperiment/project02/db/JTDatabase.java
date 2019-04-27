@@ -19,14 +19,6 @@ public abstract class JTDatabase extends RoomDatabase
     public abstract CommentDao commentDao();
     public abstract PostDao postDao();
 
-    private static RoomDatabase.Callback callback = new RoomDatabase.Callback() {
-        @Override
-        public void onCreate(@NonNull SupportSQLiteDatabase db)
-        {
-            super.onCreate(db);
-        }
-    };
-
     public static synchronized JTDatabase getInstance(Context context)
     {
         if (instance == null)

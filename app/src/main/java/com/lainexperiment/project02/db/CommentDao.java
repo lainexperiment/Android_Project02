@@ -26,9 +26,6 @@ public interface CommentDao
     @Delete
     void delete(Comment comment);
 
-    @Query("SELECT comment_table.id, comment_table.postId, comment_table.name, comment_table.email," +
-            " comment_table.body FROM comment_table INNER JOIN post_table" +
-            " ON comment_table.postId = post_table.id" +
-            " WHERE post_table.id = :postId")
+    @Query("SELECT * FROM comment_table WHERE postId = :postId ORDER BY id ASC")
     List<Comment> getAllPostComments(int postId);
 }

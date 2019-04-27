@@ -32,7 +32,7 @@ public class AppRepository
 
     public void getAllPosts(Consumer<List<Post>> consumer)
     {
-        new GetPostsAsyncTask(postDao, consumer);
+        new GetPostsAsyncTask(postDao, consumer).execute();
     }
 
     public void insertComments(List<Comment> comments)
@@ -42,7 +42,7 @@ public class AppRepository
 
     public void getAllComments(Consumer<List<Comment>> consumer, int postId)
     {
-        new GetCommentsAsyncTask(commentDao, consumer, postId);
+        new GetCommentsAsyncTask(commentDao, consumer, postId).execute();
     }
 
     private static class GetCommentsAsyncTask extends AsyncTask<Void, Void, Void>
