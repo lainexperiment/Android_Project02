@@ -1,4 +1,4 @@
-package com.lainexperiment.android_project02;
+package com.lainexperiment.project02;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
