@@ -14,6 +14,38 @@ public class Post implements DataContainer
     private String title;
     private String body;
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getUsetId() {
+        return usetId;
+    }
+
+    public void setUsetId(int usetId) {
+        this.usetId = usetId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
     @Override
     public HashMap<String, String> getData()
     {
