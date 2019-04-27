@@ -14,6 +14,7 @@ import java.util.List;
 public class AppRepository
 {
     private static final String TAG = "AppRepository";
+    private static final String PROJECT_NAME = "LainExperiment";
 
     private PostDao postDao;
     private CommentDao commentDao;
@@ -64,6 +65,8 @@ public class AppRepository
         protected Void doInBackground(Void... voids)
         {
             List<Comment> comments = commentDao.getAllPostComments(postId);
+            Log.i(TAG, PROJECT_NAME + ": " + comments.size() +
+                    " comments received from the database");
             consumer.accept(comments);
             return null;
         }
@@ -82,7 +85,7 @@ public class AppRepository
         protected Void doInBackground(Comment... comments)
         {
             commentDao.insertAll(comments);
-            Log.i(TAG, "Insertion finished.");
+            Log.i(TAG, PROJECT_NAME + ": Comment insertion finished.");
             return null;
         }
     }
@@ -103,6 +106,8 @@ public class AppRepository
         protected Void doInBackground(Void... voids)
         {
             List<Post> posts = postDao.getAllPosts();
+            Log.i(TAG, PROJECT_NAME + ": " + posts.size() +
+                    " Posts received from the database.");
             consumer.accept(posts);
             return null;
         }
@@ -121,6 +126,7 @@ public class AppRepository
         protected Void doInBackground(Post... posts)
         {
             postDao.insertAll(posts);
+            Log.i(TAG, PROJECT_NAME + ": Post insertion finished.");
             return null;
         }
     }
