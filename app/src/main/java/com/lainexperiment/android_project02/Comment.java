@@ -1,11 +1,18 @@
 package com.lainexperiment.android_project02;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.PrimaryKey;
+
 import java.util.HashMap;
 
+@Entity(tableName = "comment_table", foreignKeys = @ForeignKey(entity = Comment.class,
+        parentColumns = "id", childColumns = "postId", onDelete = ForeignKey.CASCADE))
 public class Comment implements DataContainer
 {
-    private int postId;
+    @PrimaryKey(autoGenerate = true)
     private int id;
+    private int postId;
     private String name;
     private String email;
     private String body;
