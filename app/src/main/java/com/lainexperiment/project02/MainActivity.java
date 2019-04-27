@@ -1,11 +1,19 @@
 package com.lainexperiment.project02;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.util.Consumer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +26,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView.Adapter recyclerViewAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<Post> posts = new ArrayList<>();
+    private Boolean isGridView = false;
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         });
         postsRecyclerView.setAdapter(recyclerViewAdapter);
 
+        Log.d(TAG, "onCreate: calling to get data");
         showData();
     }
 
@@ -51,5 +62,41 @@ public class MainActivity extends AppCompatActivity {
                 ((PostRecyclerViewAdapter) recyclerViewAdapter).updateData(posts);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_grid:
+                isGridView = !isGridView;
+                postsRecyclerView.setLayoutManager(isGridView ? new GridLayoutManager(this, 2) : new LinearLayoutManager(this));
+                postsRecyclerView.setAdapter(recyclerViewAdapter);
+                return true;
+            case R.id.action_team:
+                showDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void showDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("LainExperiment")
+                .setMessage("MohammadAli Zarei Matin\nRuhollah Sekaleshfar\nHamid Hashemi")
+
+                // The dialog is automatically dismissed when a dialog button is clicked.
+                .setPositiveButton("OK!", null)
+
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .show();
     }
 }
