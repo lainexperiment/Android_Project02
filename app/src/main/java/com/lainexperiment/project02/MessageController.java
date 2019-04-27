@@ -95,7 +95,6 @@ public class MessageController {
 
             posts = response.body();
             if (posts == null) {
-                // TODO handle null posts
                 Log.i(TAG, PROJECT_NAME + ": Response body is null.");
                 return;
             }
@@ -139,7 +138,6 @@ public class MessageController {
 
             comments = response.body();
             if (comments == null) {
-                // TODO handle null posts
                 Log.i(TAG, "Response body is null.");
                 return;
             }
