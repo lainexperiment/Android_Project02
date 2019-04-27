@@ -1,7 +1,6 @@
 package com.lainexperiment.project02;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v4.util.Consumer;
 import android.support.v7.app.AppCompatActivity;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,21 +22,23 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView postsRecyclerView;
     private RecyclerView.Adapter recyclerViewAdapter;
-    private RecyclerView.LayoutManager layoutManager;
     private ArrayList<Post> posts = new ArrayList<>();
     private Boolean isGridView = false;
     private static final String TAG = "MainActivity";
+    private static final String GRID_VIEW_EXTRA = "grid view extra";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (savedInstanceState != null)
+            isGridView = savedInstanceState.getBoolean(GRID_VIEW_EXTRA, false);
+
         postsRecyclerView = findViewById(R.id.post_recyclerView);
 
         // use a linear layout manager
-        layoutManager = new LinearLayoutManager(this);
-        postsRecyclerView.setLayoutManager(layoutManager);
+        postsRecyclerView.setLayoutManager(isGridView ? new GridLayoutManager(this, 2) : new LinearLayoutManager(this));
 
         // specify an adapter (see also next example)
         recyclerViewAdapter = new PostRecyclerViewAdapter(posts, new PostRecyclerViewAdapter.OnPostClickListener() {
@@ -98,5 +98,11 @@ public class MainActivity extends AppCompatActivity {
 
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .show();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(GRID_VIEW_EXTRA, isGridView);
+        super.onSaveInstanceState(outState);
     }
 }
