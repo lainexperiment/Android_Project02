@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -12,10 +13,12 @@ import java.util.List;
 
 public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerViewAdapter.PostViewHolder> {
     private List<Post> posts;
+    private OnPostClickListener listener;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public PostRecyclerViewAdapter(ArrayList<Post> posts) {
+    public PostRecyclerViewAdapter(ArrayList<Post> posts, OnPostClickListener listener) {
         this.posts = posts;
+        this.listener = listener;
     }
 
     // Create new views (invoked by the layout manager)
@@ -36,6 +39,8 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
         // - replace the contents of the view with that element
         holder.title.setText(posts.get(position).getTitle());
         holder.body.setText(posts.get(position).getBody());
+
+        holder.bind(posts.get(position), listener);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
@@ -61,5 +66,17 @@ public class PostRecyclerViewAdapter extends RecyclerView.Adapter<PostRecyclerVi
             title = v.findViewById(R.id.tv_title);
             body = v.findViewById(R.id.tv_body);
         }
+
+        public void bind(final Post post, final OnPostClickListener listener) {
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View v) {
+                    listener.onPostClick(post);
+                }
+            });
+        }
+    }
+
+    public interface OnPostClickListener {
+        void onPostClick(Post post);
     }
 }
