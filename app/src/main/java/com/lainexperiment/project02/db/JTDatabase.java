@@ -12,17 +12,15 @@ import com.lainexperiment.project02.Comment;
 import com.lainexperiment.project02.Post;
 
 @Database(entities = {Post.class, Comment.class}, version = 1)
-public abstract class JTDatabase extends RoomDatabase
-{
+public abstract class JTDatabase extends RoomDatabase {
     private static JTDatabase instance;
 
     public abstract CommentDao commentDao();
+
     public abstract PostDao postDao();
 
-    public static synchronized JTDatabase getInstance(Context context)
-    {
-        if (instance == null)
-        {
+    public static synchronized JTDatabase getInstance(Context context) {
+        if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(), JTDatabase.class,
                     "JT_database").fallbackToDestructiveMigration().build();
         }

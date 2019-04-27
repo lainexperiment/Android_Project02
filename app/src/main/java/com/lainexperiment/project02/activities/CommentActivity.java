@@ -1,4 +1,4 @@
-package com.lainexperiment.project02;
+package com.lainexperiment.project02.activities;
 
 import android.support.v4.util.Consumer;
 import android.support.v7.app.AppCompatActivity;
@@ -6,6 +6,11 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+
+import com.lainexperiment.project02.Comment;
+import com.lainexperiment.project02.CommentRecyclerViewAdapter;
+import com.lainexperiment.project02.MessageController;
+import com.lainexperiment.project02.R;
 
 import java.util.ArrayList;
 import java.util.List;

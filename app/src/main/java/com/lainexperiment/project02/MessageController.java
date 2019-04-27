@@ -45,8 +45,7 @@ public class MessageController {
     }
 
     public void getPosts(final Consumer<List<Post>> consumer) {
-        if (System.currentTimeMillis() - sharedPreferences.getLong(POSTS_LAST_SEEN_TIME, 0) < 5 * 60 * 1000)
-        {
+        if (System.currentTimeMillis() - sharedPreferences.getLong(POSTS_LAST_SEEN_TIME, 0) < 5 * 60 * 1000) {
             Log.i(TAG, PROJECT_NAME + ": Less than 5 minutes passed." +
                     " Requesting from the database.");
             repository.getAllPosts(consumer);
@@ -60,8 +59,7 @@ public class MessageController {
 
     public void getComments(int postId, final Consumer<List<Comment>> consumer) {
         long prevCommentReceiveMillis = sharedPreferences.getLong(COMMENTS_LAST_SEEN_PREFIX + String.valueOf(postId), 0);
-        if (System.currentTimeMillis() - prevCommentReceiveMillis < 5 * 60 * 1000)
-        {
+        if (System.currentTimeMillis() - prevCommentReceiveMillis < 5 * 60 * 1000) {
             Log.i(TAG, PROJECT_NAME + ": Less than 5 minutes passed. " +
                     "Requesting the commend of post " + postId + " from the database.");
             repository.getAllComments(consumer, postId);
@@ -73,12 +71,10 @@ public class MessageController {
         commentsCall.enqueue(new CommentReceivingCallback(consumer, postId));
     }
 
-    private class PostReceivingCallback implements Callback<List<Post>>
-    {
+    private class PostReceivingCallback implements Callback<List<Post>> {
         private final Consumer<List<Post>> consumer;
 
-        private PostReceivingCallback(final Consumer<List<Post>> consumer)
-        {
+        private PostReceivingCallback(final Consumer<List<Post>> consumer) {
             this.consumer = consumer;
         }
 
@@ -112,13 +108,11 @@ public class MessageController {
         }
     }
 
-    private class CommentReceivingCallback implements Callback<List<Comment>>
-    {
+    private class CommentReceivingCallback implements Callback<List<Comment>> {
         private final Consumer<List<Comment>> consumer;
         private int postId;
 
-        private CommentReceivingCallback(final Consumer<List<Comment>> consumer, int postId)
-        {
+        private CommentReceivingCallback(final Consumer<List<Comment>> consumer, int postId) {
             this.consumer = consumer;
             this.postId = postId;
         }

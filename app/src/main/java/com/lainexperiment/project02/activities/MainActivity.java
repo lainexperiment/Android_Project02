@@ -1,4 +1,4 @@
-package com.lainexperiment.project02;
+package com.lainexperiment.project02.activities;
 
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -13,10 +13,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.lainexperiment.project02.MessageController;
+import com.lainexperiment.project02.Post;
+import com.lainexperiment.project02.PostRecyclerViewAdapter;
+import com.lainexperiment.project02.R;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.lainexperiment.project02.CommentActivity.POST_ID_EXTRA;
+import static com.lainexperiment.project02.activities.CommentActivity.POST_ID_EXTRA;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -12,8 +12,7 @@ import com.lainexperiment.project02.Post;
 import java.util.List;
 
 @Dao
-public interface PostDao
-{
+public interface PostDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Post... posts);
 
