@@ -1,6 +1,7 @@
 package com.lainexperiment.project02;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.util.Consumer;
 import android.util.Log;
 import android.util.SparseLongArray;
@@ -24,6 +25,7 @@ public class MessageController {
     private AppRepository repository;
     private long prevPostReceiveMillis = 0;
     private SparseLongArray sparsePrevCommentMillis;
+    private SharedPreferences sharedPreferences;
 
     private MessageController(Context context) {
         Retrofit retrofit = new Retrofit.Builder()
@@ -33,6 +35,8 @@ public class MessageController {
         MessageController.api = retrofit.create(MoshiAPI.class);
         this.repository = new AppRepository(context);
         this.sparsePrevCommentMillis = new SparseLongArray();
+        sharedPreferences = context.getSharedPreferences("AppSharedPrefs", Context.MODE_PRIVATE);
+        prevPostReceiveMillis = sharedPreferences.getInt("prevPostReceiveMillis", 0);
     }
 
     public static MessageController getInstance(Context context) {
