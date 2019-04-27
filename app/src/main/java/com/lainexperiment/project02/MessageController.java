@@ -1,11 +1,9 @@
 package com.lainexperiment.project02;
 
-import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.util.Consumer;
 import android.util.Log;
-import android.util.SparseLongArray;
 
 import com.lainexperiment.project02.db.AppRepository;
 
