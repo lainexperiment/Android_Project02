@@ -1,6 +1,5 @@
 package com.lainexperiment.project02.db;
 
-import android.app.Application;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.util.Consumer;
@@ -64,10 +63,17 @@ public class AppRepository
         @Override
         protected Void doInBackground(Void... voids)
         {
-            List<Comment> comments = commentDao.getAllPostComments(postId);
-            Log.i(TAG, PROJECT_NAME + ": " + comments.size() +
-                    " comments received from the database");
-            consumer.accept(comments);
+            try
+            {
+                List<Comment> comments = commentDao.getAllPostComments(postId);
+                Log.i(TAG, PROJECT_NAME + ": " + comments.size() +
+                        " comments received from the database");
+                consumer.accept(comments);
+            } catch (Exception e)
+            {
+                Log.i(TAG, PROJECT_NAME + ": Failed to get comments");
+                Log.e(TAG, PROJECT_NAME + ": " + e.getMessage());
+            }
             return null;
         }
     }
@@ -84,8 +90,15 @@ public class AppRepository
         @Override
         protected Void doInBackground(Comment... comments)
         {
-            commentDao.insertAll(comments);
-            Log.i(TAG, PROJECT_NAME + ": Comment insertion finished.");
+            try
+            {
+                commentDao.insertAll(comments);
+                Log.i(TAG, PROJECT_NAME + ": Comment insertion finished.");
+            } catch (Exception e)
+            {
+                Log.i(TAG, PROJECT_NAME + ": Comment insertion failed");
+                Log.e(TAG, PROJECT_NAME + ": " + e.getMessage());
+            }
             return null;
         }
     }
@@ -105,10 +118,20 @@ public class AppRepository
         @Override
         protected Void doInBackground(Void... voids)
         {
-            List<Post> posts = postDao.getAllPosts();
-            Log.i(TAG, PROJECT_NAME + ": " + posts.size() +
-                    " Posts received from the database.");
-            consumer.accept(posts);
+            List<Post> posts = null;
+
+            try
+            {
+                posts = postDao.getAllPosts();
+                Log.i(TAG, PROJECT_NAME + ": " + posts.size() +
+                        " Posts received from the database.");
+                consumer.accept(posts);
+            } catch (Exception e)
+            {
+                Log.i(TAG, PROJECT_NAME + ": Failed to get posts");
+                Log.e(TAG, PROJECT_NAME + ": " + e.getMessage());
+            }
+
             return null;
         }
     }
@@ -125,8 +148,15 @@ public class AppRepository
         @Override
         protected Void doInBackground(Post... posts)
         {
-            postDao.insertAll(posts);
-            Log.i(TAG, PROJECT_NAME + ": Post insertion finished.");
+            try
+            {
+                postDao.insertAll(posts);
+                Log.i(TAG, PROJECT_NAME + ": Post insertion finished.");
+            } catch (Exception e)
+            {
+                Log.i(TAG, PROJECT_NAME + ": Post insertion failed");
+                Log.e(TAG, PROJECT_NAME + ": " + e.getMessage());
+            }
             return null;
         }
     }
