@@ -27,11 +27,9 @@ public class CommentActivity extends AppCompatActivity {
 
         commentsRecyclerView = findViewById(R.id.comment_recyclerView);
 
-        // use a linear layout manager
         layoutManager = new LinearLayoutManager(this);
         commentsRecyclerView.setLayoutManager(layoutManager);
 
-        // specify an adapter (see also next example)
         recyclerViewAdapter = new CommentRecyclerViewAdapter(comments);
         commentsRecyclerView.setAdapter(recyclerViewAdapter);
 

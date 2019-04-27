@@ -1,11 +1,9 @@
 package com.lainexperiment.project02;
 
-import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v4.util.Consumer;
 import android.util.Log;
-import android.util.SparseLongArray;
 
 import com.lainexperiment.project02.db.AppRepository;
 
@@ -20,6 +18,8 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 public class MessageController {
     private final static String TAG = "MessageController";
     private final static String PROJECT_NAME = "LainExperiment";
+    private final static String POSTS_LAST_SEEN_TIME = "posts last seen time";
+    private final static String COMMENTS_LAST_SEEN_PREFIX = "comments last seen prefix";
 
     private static MoshiAPI api;
     private static MessageController instance;
@@ -45,7 +45,7 @@ public class MessageController {
     }
 
     public void getPosts(final Consumer<List<Post>> consumer) {
-        if (System.currentTimeMillis() - sharedPreferences.getLong("-1", 0) < 5 * 60 * 1000)
+        if (System.currentTimeMillis() - sharedPreferences.getLong(POSTS_LAST_SEEN_TIME, 0) < 5 * 60 * 1000)
         {
             Log.i(TAG, PROJECT_NAME + ": Less than 5 minutes passed." +
                     " Requesting from the database.");
@@ -59,7 +59,7 @@ public class MessageController {
     }
 
     public void getComments(int postId, final Consumer<List<Comment>> consumer) {
-        long prevCommentReceiveMillis = sharedPreferences.getLong(String.valueOf(postId), 0);
+        long prevCommentReceiveMillis = sharedPreferences.getLong(COMMENTS_LAST_SEEN_PREFIX + String.valueOf(postId), 0);
         if (System.currentTimeMillis() - prevCommentReceiveMillis < 5 * 60 * 1000)
         {
             Log.i(TAG, PROJECT_NAME + ": Less than 5 minutes passed. " +
@@ -102,7 +102,7 @@ public class MessageController {
             consumer.accept(posts);
             Log.i(TAG, PROJECT_NAME + ": Inserting " + posts.size() + " posts");
             repository.insertPosts(posts);
-            sharedPreferences.edit().putLong("-1", System.currentTimeMillis()).apply();
+            sharedPreferences.edit().putLong(POSTS_LAST_SEEN_TIME, System.currentTimeMillis()).apply();
         }
 
         @Override
@@ -149,7 +149,7 @@ public class MessageController {
                     + " comments of post " + postId);
             repository.insertComments(comments);
             sharedPreferences.edit().
-                    putLong(String.valueOf(postId), System.currentTimeMillis()).apply();
+                    putLong(COMMENTS_LAST_SEEN_PREFIX + String.valueOf(postId), System.currentTimeMillis()).apply();
         }
 
         @Override

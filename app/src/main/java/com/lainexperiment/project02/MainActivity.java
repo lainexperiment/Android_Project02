@@ -37,10 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
         postsRecyclerView = findViewById(R.id.post_recyclerView);
 
-        // use a linear layout manager
         postsRecyclerView.setLayoutManager(isGridView ? new GridLayoutManager(this, 2) : new LinearLayoutManager(this));
 
-        // specify an adapter (see also next example)
         recyclerViewAdapter = new PostRecyclerViewAdapter(posts, new PostRecyclerViewAdapter.OnPostClickListener() {
             @Override
             public void onPostClick(Post post) {
@@ -51,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         });
         postsRecyclerView.setAdapter(recyclerViewAdapter);
 
-        Log.d(TAG, "onCreate: calling to get data");
+        Log.d(TAG, "onCreate: lainExperiment: calling to get posts data");
         showData();
     }
 
@@ -73,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_grid:
                 isGridView = !isGridView;
