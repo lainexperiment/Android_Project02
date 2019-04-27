@@ -1,5 +1,8 @@
 package com.lainexperiment.project02;
 
+import android.arch.core.util.Function;
+import android.support.v4.util.Consumer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,82 +12,71 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.moshi.MoshiConverterFactory;
 
-public class MessageController
-{
-    // TODO There are two approaches for DataContainer Class. 1- getData method. 2- down casting
-    private ArrayList<DataContainer> dataContainers;
-    private MoshiAPI api;
+public class MessageController {
+    private static MoshiAPI api;
+    private static Retrofit retrofit;
+    private static MessageController instance;
 
-    public MessageController()
-    {
-        this.dataContainers = new ArrayList<>();
-
-        Retrofit retrofit = new Retrofit.Builder()
+    private MessageController() {
+        retrofit = new Retrofit.Builder()
                 .baseUrl("https://jsonplaceholder.typicode.com/")
                 .addConverterFactory(MoshiConverterFactory.create())
                 .build();
         api = retrofit.create(MoshiAPI.class);
     }
 
-    public void getPosts()
-    {
+    public static MessageController getInstance() {
+        if (instance == null) {
+            instance = new MessageController();
+        }
+        return instance;
+    }
+
+    public void getPosts(final Consumer<List<Post>> callback) {
         Call<List<Post>> postsCall = api.getPosts();
-        postsCall.enqueue(new Callback<List<Post>>()
-        {
+        postsCall.enqueue(new Callback<List<Post>>() {
             @Override
-            public void onResponse(Call<List<Post>> call, Response<List<Post>> response)
-            {
-                if (!response.isSuccessful())
-                {
+            public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
+                if (!response.isSuccessful()) {
                     // TODO handle error
                     return;
                 }
 
                 List<Post> posts = response.body();
-                if (posts == null)
-                {
+                if (posts == null) {
                     // TODO handle null posts
                     return;
                 }
-                dataContainers.clear();
-                dataContainers.addAll(posts);
+                callback.accept(posts);
             }
 
             @Override
-            public void onFailure(Call<List<Post>> call, Throwable t)
-            {
+            public void onFailure(Call<List<Post>> call, Throwable t) {
                 // TODO handle error
             }
         });
     }
 
-    public void getComments(int postId)
-    {
+    public void getComments(int postId) {
         Call<List<Comment>> commentsCall = api.getComments(postId);
-        commentsCall.enqueue(new Callback<List<Comment>>()
-        {
+        commentsCall.enqueue(new Callback<List<Comment>>() {
             @Override
-            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response)
-            {
-                if (!response.isSuccessful())
-                {
+            public void onResponse(Call<List<Comment>> call, Response<List<Comment>> response) {
+                if (!response.isSuccessful()) {
                     // TODO handle error
                     return;
                 }
 
                 List<Comment> comments = response.body();
-                if (comments == null)
-                {
+                if (comments == null) {
                     // TODO handle null comments
                     return;
                 }
-                dataContainers.clear();
-                dataContainers.addAll(comments);
+                //TODO
             }
 
             @Override
-            public void onFailure(Call<List<Comment>> call, Throwable t)
-            {
+            public void onFailure(Call<List<Comment>> call, Throwable t) {
                 // TODO handle error
             }
         });
