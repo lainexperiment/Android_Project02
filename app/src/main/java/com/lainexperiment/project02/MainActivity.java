@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showData() {
-        MessageController.getInstance().getPosts(new Consumer<List<Post>>() {
+        MessageController.getInstance(this).getPosts(new Consumer<List<Post>>() {
             @Override
             public void accept(List<Post> posts) {
                 ((PostRecyclerViewAdapter) recyclerViewAdapter).updateData(posts);
