@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v4.util.Consumer;
+import android.util.Log;
 
 import com.lainexperiment.project02.Comment;
 import com.lainexperiment.project02.Post;
@@ -12,6 +13,8 @@ import java.util.List;
 
 public class AppRepository
 {
+    private static final String TAG = "AppRepository";
+
     private PostDao postDao;
     private CommentDao commentDao;
 
@@ -79,6 +82,7 @@ public class AppRepository
         protected Void doInBackground(Comment... comments)
         {
             commentDao.insertAll(comments);
+            Log.i(TAG, "Insertion finished.");
             return null;
         }
     }

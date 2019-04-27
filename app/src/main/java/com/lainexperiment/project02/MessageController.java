@@ -118,25 +118,29 @@ public class MessageController {
             List<Comment> comments;
 
             if (!response.isSuccessful()) {
+                Log.i(TAG, "Response not successful. " + "Comments from post id " + postId +
+                        " Received from the database.");
                 repository.getAllComments(consumer, postId);
-                // TODO log
                 return;
             }
 
             comments = response.body();
             if (comments == null) {
                 // TODO handle null posts
+                Log.i(TAG, "Response body is null.");
                 return;
             }
             consumer.accept(comments);
+            Log.i(TAG, "Inserting comments of post " + postId);
             repository.insertComments(comments);
             sparsePrevCommentMillis.put(postId, System.currentTimeMillis());
         }
 
         @Override
         public void onFailure(Call<List<Comment>> call, Throwable t) {
+            Log.i(TAG, "Request failed. " + "Comments from post id " + postId +
+                    " Received from the database.");
             repository.getAllComments(consumer, postId);
-            // TODO handle error
         }
     }
 }
